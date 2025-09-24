@@ -1,11 +1,20 @@
 package infra
 
-import (
-	"go-todo-list/internal/domain"
-)
+import "go-todo-list/internal/domain"
 
+// infra 層で usecase 層の TodoRepository インターフェースを実装する。
 type TodoRepository struct{}
 
-func (r *TodoRepository) Save(todo *domain.Todo) error {
-	return DB.Create(todo).Error
+// NewTodoRepository は TodoRepository のコンストラクタ。
+func NewTodoRepository() *TodoRepository {
+	return &TodoRepository{}
+}
+
+// FindAll はすべての Todo をデータベースから取得する。
+func (r *TodoRepository) FindAll() ([]domain.Todo, error) {
+	var todos []domain.Todo
+	if err := DB.Find(&todos).Error; err != nil {
+		return nil, err
+	}
+	return todos, nil
 }
