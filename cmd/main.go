@@ -1,24 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"go-todo-list/internal/domain"
 	"go-todo-list/internal/infra"
+	"go-todo-list/internal/interface/handler"
 )
 
 func main() {
+	// DB初期化
 	infra.InitDB()
 
-	todo := domain.Todo{
-		Title:       "ステータス付きタグ",
-		Description: "ステータス付きタグの説明",
-		Status:      domain.NotStarted,
-	}
+	// Ginルーター初期化
+	r := handler.SetupRouter()
 
-	repo := infra.TodoRepository{}
-	err := repo.Save(&todo)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("✅ Todo 登録完了！")
+	// サーバー起動
+	r.Run(":8080")
 }
