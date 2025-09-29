@@ -26,6 +26,8 @@ func SetupRouter() *gin.Engine {
 
 	// GET /todos にアクセスがあったとき、GetTodos 関数が呼び出されるようにルーティングを設定する。
 	r.GET("/todos", h.GetTodos)
+	// POST /todos にアクセスがあったとき、PostTodo 関数が呼び出されるようにルーティングを設定する。
+	r.POST("/todos", h.PostTodo)
 
 	// 初期化したルーターを返す。
 	return r

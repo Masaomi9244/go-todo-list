@@ -18,3 +18,11 @@ func (r *TodoRepository) FindAll() ([]domain.Todo, error) {
 	}
 	return todos, nil
 }
+
+// Save は新しい Todo をデータベースに保存する。
+func (r *TodoRepository) Create(todo *domain.Todo) error {
+	if err := DB.Create(todo).Error; err != nil {
+		return err
+	}
+	return nil
+}
