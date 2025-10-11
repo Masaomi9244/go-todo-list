@@ -9,6 +9,10 @@ type TodoRepository interface {
 	FindAll() ([]domain.Todo, error)
 	// 新しい Todo を1件保存するメソッド。
 	Create(todo *domain.Todo) error
+	// IDに基づいて Todo を取得するメソッド。
+	FindById(int uint) (*domain.Todo, error)
+	// 既存の Todo を更新するメソッド。
+	Update(todo *domain.Todo) error
 }
 
 // Todo に関するユースケースを実装する構造体。
@@ -32,5 +36,26 @@ func (u *TodoUsecase) CreateTodo(todo *domain.Todo) (*domain.Todo, error) {
 	if err := u.repo.Create(todo); err != nil {
 		return nil, err
 	}
+	return todo, nil
+}
+
+// ID に基づいて既存の Todo を更新するユースケース。
+func (u *TodoUsecase) UpdateTodo(id uint, updated *domain.Todo) (*domain.Todo, error) {
+	// infra層のリポジトリ経由でTodoを取得
+	todo, err := u.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// 更新内容を反映
+	todo.Title = updated.Title
+	todo.Description = updated.Description
+	todo.Status = updated.Status
+
+	// DBを更新
+	if err := u.repo.Update(todo); err != nil {
+		return nil, err
+	}
+
 	return todo, nil
 }

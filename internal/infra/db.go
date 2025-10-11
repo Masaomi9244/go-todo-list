@@ -21,3 +21,17 @@ func InitDB() {
 	err = DB.AutoMigrate(&domain.Todo{})
 	utils.FatalIfErr(err, "マイグレーション失敗")
 }
+
+// IDに基づいて Todo を取得するメソッド。
+func (r *TodoRepository) FindById(id uint) (*domain.Todo, error) {
+	var todo domain.Todo
+	if err := DB.First(&todo, id).Error; err != nil {
+		return nil, err
+	}
+	return &todo, nil
+}
+
+// 既存の Todo を更新するメソッド。
+func (r *TodoRepository) Update(todo *domain.Todo) error {
+	return DB.Save(todo).Error
+}
